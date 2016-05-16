@@ -7,9 +7,7 @@ require 'mechanize'
 require 'google/api_client'
 require 'google_drive'
 
-
 helpers do
-
     def fetch_announcements
       json = open("https://tiyspeakers.herokuapp.com/api/v1/announcements").read
       JSON.parse(json, object_class: OpenStruct)["announcements"]
@@ -37,7 +35,7 @@ helpers do
     end
 
     def fetch_meetups_worth_going
-      json = open("https://api.meetup.com/2/events?member_id=100501792&offset=0&format=json&limited_events=False&photo-host=public&page=20&fields=&order=time&desc=false&status=upcoming&sig_id=100501792&sig=a16f1f16f21e97938877eb5d4bb2a1399739a0bb").read
+      json = open("https://api.meetup.com/2/events?member_id=#{ENV['PRIMARY_MEETUP_MEMBER_ID']}&offset=0&format=json&limited_events=False&photo-host=public&page=20&fields=&order=time&desc=false&status=upcoming&sig_id=100501792&sig=a16f1f16f21e97938877eb5d4bb2a1399739a0bb").read
       JSON.parse(json, object_class: OpenStruct)["results"]
     end
 
@@ -48,7 +46,6 @@ helpers do
     def meetups_worth_this_week
       all_meetups_worth_going.select {|t| t["time"] >= Time.now.beginning_of_week(start_day = :sunday).to_i*1000 && Time.now.end_of_week(end_day = :sunday).to_i*1000 >= t["time"] }
     end
-
 
     def comic_url
       url = 'http://www.commitstrip.com/en/'
@@ -149,19 +146,19 @@ set :images_dir, 'images'
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
-  # activate :minify_css
+  activate :minify_css
 
   # Minify Javascript on build
-  # activate :minify_javascript
+  activate :minify_javascript
 
   # Enable cache buster
   # activate :asset_hash
 
   # Use relative URLs
-  # activate :relative_assets
+  activate :relative_assets
 
   # Or use a different image path
-  set :http_prefix, "/tiykiosk/"
+  # set :http_prefix, "/kiosk/"
 end
 
 activate :deploy do |deploy|
