@@ -1,95 +1,91 @@
-require 'ostruct'
+require "ostruct"
 require "json"
-require 'open-uri'
-require 'date'
-require 'active_support/all'
-require 'mechanize'
-require 'google/api_client'
-require 'google_drive'
+require "open-uri"
+require "date"
+require "active_support/all"
+require "mechanize"
+require "google/api_client"
+require "google_drive"
 
 helpers do
-    def fetch_announcements
-      json = open("https://tiyspeakers.herokuapp.com/api/v1/announcements").read
-      JSON.parse(json, object_class: OpenStruct)["announcements"]
-    end
+  def fetch_announcements
+    json = open("https://tiyspeakers.herokuapp.com/api/v1/announcements").read
+    JSON.parse(json, object_class: OpenStruct)["announcements"]
+  end
 
-    def all_announcements
-      @all_announcements ||= fetch_announcements
-    end
+  def all_announcements
+    @all_announcements ||= fetch_announcements
+  end
 
-    def this_week_announcements
-      all_announcements.select {|t| t["date"] >= Time.now.beginning_of_week(start_day = :sunday) && Time.now.end_of_week(end_day = :saturday) >= t["date"] }
-    end
+  def this_week_announcements
+    all_announcements.select { |t| t["date"] >= Time.now.beginning_of_week(start_day = :sunday) && Time.now.end_of_week(end_day = :saturday) >= t["date"] }
+  end
 
-    def fetch_meetups
-        json = open("https://api.meetup.com/2/events?&sign=true&photo-host=public&venue_id=#{ENV['PRIMARY_MEETUP_VENUE_ID']}&page=20&key=326e493f58383976434f5963243a5e&callback=?").read
-        JSON.parse(json, object_class: OpenStruct)["results"]
-    end
+  def fetch_meetups
+    json = open("https://api.meetup.com/2/events?&sign=true&photo-host=public&venue_id=#{ENV['PRIMARY_MEETUP_VENUE_ID']}&page=20&key=326e493f58383976434f5963243a5e&callback=?").read
+    JSON.parse(json, object_class: OpenStruct)["results"]
+  end
 
-    def all_meetups
-      @all_meetups ||= fetch_meetups
-    end
+  def all_meetups
+    @all_meetups ||= fetch_meetups
+  end
 
-    def meetups_this_week
-      all_meetups.select {|t| t["time"] >= Time.now.beginning_of_week(start_day = :sunday).to_i*1000 && Time.now.end_of_week(end_day = :saturday).to_i*1000 >= t["time"] }
-    end
+  def meetups_this_week
+    all_meetups.select { |t| t["time"] >= Time.now.beginning_of_week(start_day = :sunday).to_i * 1000 && Time.now.end_of_week(end_day = :saturday).to_i * 1000 >= t["time"] }
+  end
 
-    def fetch_meetups_worth_going
-      json = open("https://api.meetup.com/2/events?member_id=#{ENV['PRIMARY_MEETUP_MEMBER_ID']}&offset=0&format=json&limited_events=False&photo-host=public&page=20&fields=&order=time&desc=false&status=upcoming&sig_id=100501792&sig=a16f1f16f21e97938877eb5d4bb2a1399739a0bb").read
-      JSON.parse(json, object_class: OpenStruct)["results"]
-    end
+  def fetch_meetups_worth_going
+    json = open("https://api.meetup.com/2/events?member_id=#{ENV['PRIMARY_MEETUP_MEMBER_ID']}&offset=0&format=json&limited_events=False&photo-host=public&page=20&fields=&order=time&desc=false&status=upcoming&sig_id=100501792&sig=a16f1f16f21e97938877eb5d4bb2a1399739a0bb").read
+    JSON.parse(json, object_class: OpenStruct)["results"]
+  end
 
-    def all_meetups_worth_going
-      @meetups_worth ||= fetch_meetups_worth_going
-    end
+  def all_meetups_worth_going
+    @meetups_worth ||= fetch_meetups_worth_going
+  end
 
-    def meetups_worth_this_week
-      # all_meetups_worth_going.select {|t| t["time"] >= Time.now.beginning_of_week(start_day = :sunday).to_i*1000 && Time.now.end_of_week(end_day = :sunday).to_i*1000 >= t["time"] }
-      []
-    end
+  def meetups_worth_this_week
+    # all_meetups_worth_going.select {|t| t["time"] >= Time.now.beginning_of_week(start_day = :sunday).to_i*1000 && Time.now.end_of_week(end_day = :sunday).to_i*1000 >= t["time"] }
+    []
+  end
 
-    def comic_url
-      url = 'http://www.commitstrip.com/en/'
-      agent = Mechanize.new
-      page = agent.get(url)
+  def comic_url
+    url = "http://www.commitstrip.com/en/"
+    agent = Mechanize.new
+    page = agent.get(url)
 
-      detail_page = agent.click page.at(".excerpts .excerpt a")
-      detail_page.at(".entry-content img")['src']
-    end
+    detail_page = agent.click page.at(".excerpts .excerpt a")
+    detail_page.at(".entry-content img")["src"]
+  end
 
-    def fetch_speakers
-      json = open("https://tiyspeakers.herokuapp.com/api/v1/speakers").read
-      JSON.parse(json, object_class: OpenStruct)["speakers"]
-    end
+  def fetch_speakers
+    json = open("https://tiyspeakers.herokuapp.com/api/v1/speakers").read
+    JSON.parse(json, object_class: OpenStruct)["speakers"]
+  end
 
+  def all_speakers
+    @all_speakers ||= fetch_speakers
+  end
 
-    def all_speakers
-      @all_speakers ||= fetch_speakers
-    end
+  def this_week_speaker
+    all_speakers.select do |t|
+      talk_date = t["date"] || "3000-02-02".to_date.strftime("%m/%d/%Y")
+      talk_date >= Time.now.beginning_of_week(start_day = :sunday).strftime("%m/%d/%Y") && Time.now.end_of_week(end_day = :saturday).strftime("%m/%d/%Y") >= talk_date
+    end.sort_by(&:date)
+  end
 
-    def this_week_speaker
+  def fetch_all_demos
+    json = open("https://tiydemoday.herokuapp.com/api/v1/students").read
+    JSON.parse(json, object_class: OpenStruct)["students"]
+  end
 
-      all_speakers.select do |t|
-        talk_date = t["date"] || "3000-02-02".to_date.strftime('%m/%d/%Y')
-        talk_date >= Time.now.beginning_of_week(start_day = :sunday).strftime('%m/%d/%Y') && Time.now.end_of_week(end_day = :saturday).strftime('%m/%d/%Y') >= talk_date
-      end.sort_by {|date| date.date}
-    end
+  def all_demos
+    @all_demos ||= fetch_all_demos
+  end
 
-    def fetch_all_demos
-      json = open("https://tiydemoday.herokuapp.com/api/v1/students").read
-      JSON.parse(json, object_class: OpenStruct)["students"]
-    end
-
-    def all_demos
-      @all_demos ||= fetch_all_demos
-    end
-
-    def demo
-      all_demos.select {|t| t["cohort_id"] == 18 }.sort_by {|lastname| lastname["name"].split(" ").last}
-    end
-
+  def demo
+    all_demos.select { |t| t["cohort_id"] == 18 }.sort_by { |lastname| lastname["name"].split(" ").last }
+  end
 end
-
 
 ###
 # Compass
@@ -140,9 +136,9 @@ end
 #   end
 # end
 
-set :css_dir, 'stylesheets'
-set :js_dir, 'javascripts'
-set :images_dir, 'images'
+set :css_dir, "stylesheets"
+set :js_dir, "javascripts"
+set :images_dir, "images"
 
 # Build-specific configuration
 configure :build do
@@ -172,7 +168,7 @@ activate :deploy do |deploy|
 end
 
 ready do
-  sprockets.import_asset 'reveal.js/plugin/markdown/markdown.js'
-  sprockets.import_asset 'reveal.js/plugin/markdown/marked.js'
-  sprockets.import_asset 'reveal.js/plugin/highlight/highlight.js'
+  sprockets.import_asset "reveal.js/plugin/markdown/markdown.js"
+  sprockets.import_asset "reveal.js/plugin/markdown/marked.js"
+  sprockets.import_asset "reveal.js/plugin/highlight/highlight.js"
 end
