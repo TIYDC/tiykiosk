@@ -9,15 +9,14 @@ today = moment().format('dddd, MMMM Do')
 document.getElementById('today').innerHTML = today
 
 checkForNewBuild = ->
-  $.get 'build.json', (data) ->
-    console.log window.kioskBuild, data.build_id
-    if data.build_id != window.kioskBuild
-      unless location.host != "localhost"
+  $.get 'build.json', (rep) ->
+    unless rep.build_id == window.kisokBuild
+      if location.host != "localhost"
         location.reload()
       else
-        console.log "Detecting newer content would reload in Prod"
+        console.log rep.build_id, window.kisokBuild, "Detecting newer content would reload in Prod"
 
-setInterval(checkForNewBuild, 1000)
+setInterval(checkForNewBuild, 3000)
 
 Reveal.initialize
   width: "90%"
