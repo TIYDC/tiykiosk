@@ -1,14 +1,24 @@
 #= require reveal.js/lib/js/head.min
 #= require reveal.js/js/reveal
 #= require moment
+#= require jquery
 
 # <!-- Sets date using Moment.js -->
 today = moment().format('dddd, MMMM Do')
 # document.getElementById('now').innerHTML = now;
 document.getElementById('today').innerHTML = today
 
-# <!-- Gets objects from a google doc -->
+checkForNewBuild = ->
+  $.get('build.json', (data) ->
+    if data.build_id != window.kioskBuild
+      unless location.host != "localhost"
+        location.reload()
+      else
+        console.log "Detecting newer content would reload in Prod"
 
+  )
+
+setInterval(checkForNewBuild, 1000)
 
 Reveal.initialize
   width: "90%"

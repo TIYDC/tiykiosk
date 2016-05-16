@@ -11,6 +11,8 @@ gem "momentjs-middleman", "~> 2.6.1"
 
 gem "mechanize"
 
+gem "jquery-middleman"
+
 gem "google-drive"
 
 gem "rack-contrib"

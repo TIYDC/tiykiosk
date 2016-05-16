@@ -77,6 +77,8 @@ GEM
       domain_name (~> 0.5)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
+    jquery-middleman (3.1.2)
+      thor (>= 0.14, < 2.0)
     json (1.8.3)
     jwt (1.5.1)
     kramdown (1.8.0)
@@ -216,11 +218,15 @@ PLATFORMS
 
 DEPENDENCIES
   google-drive
+  jquery-middleman
   mechanize
   middleman (~> 3.3.2)
   middleman-deploy (~> 1.0)
   middleman-livereload (~> 3.1.0)
   momentjs-middleman (~> 2.6.1)
   rack-contrib
-  rails-assets-reveal.js
+  rails-assets-reveal.js!
   thin
+
+BUNDLED WITH
+   1.11.2

@@ -8,6 +8,10 @@ require "google/api_client"
 require "google_drive"
 
 helpers do
+  def build_id
+    @build_id ||= SecureRandom.hex
+  end
+
   def fetch_announcements
     json = open("https://tiyspeakers.herokuapp.com/api/v1/announcements").read
     JSON.parse(json, object_class: OpenStruct)["announcements"]
