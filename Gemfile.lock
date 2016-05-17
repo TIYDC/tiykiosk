@@ -33,6 +33,7 @@ GEM
     compass-import-once (1.0.5)
       sass (>= 3.2, < 3.5)
     daemons (1.2.3)
+    diff-lcs (1.2.5)
     domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.1)
@@ -194,6 +195,19 @@ GEM
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     retriable (1.4.1)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.4)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     sass (3.4.22)
     signet (0.7.2)
       addressable (~> 2.3)
@@ -244,6 +258,7 @@ DEPENDENCIES
   momentjs-middleman (~> 2.6.1)
   rack-contrib
   rails-assets-reveal.js!
+  rspec
   thin
 
 BUNDLED WITH

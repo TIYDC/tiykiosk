@@ -1,0 +1,12 @@
+require "ostruct"
+require "json"
+require "open-uri"
+require "date"
+require "active_support/all"
+require "mechanize"
+require "google/api_client"
+require "google_drive"
+require_relative 'kiosk/meetup'
+require_relative 'kiosk/onsite_meetup'
+require_relative 'kiosk/worthwhile_meetup'
+require_relative 'kiosk/meetup_decorator'

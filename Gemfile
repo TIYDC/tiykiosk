@@ -18,6 +18,8 @@ gem "google-drive"
 
 gem "rack-contrib"
 
+gem "rspec"
+
 gem "thin"
 
 source "https://rails-assets.org" do
