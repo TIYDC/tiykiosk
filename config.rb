@@ -7,6 +7,11 @@ require "mechanize"
 require "google/api_client"
 require "google_drive"
 
+# Build ENV
+require 'dotenv'
+Dotenv.load
+
+# View Helpers
 helpers do
   def build_id
     $build_id ||= SecureRandom.hex
