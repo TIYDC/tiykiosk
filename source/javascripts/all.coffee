@@ -16,7 +16,8 @@ checkForNewBuild = ->
       else
         console.log rep.build_id, window.kisokBuild, "Detecting newer content would reload in Prod"
 
-setInterval(checkForNewBuild, 3000)
+minutesToWaitBeforeCheckingForNewBuild = 10
+setInterval(checkForNewBuild, minutesToWaitBeforeCheckingForNewBuild * 60 * 1000)
 
 Reveal.initialize
   width: "90%"
