@@ -8,7 +8,7 @@ class Meetup
   end
 
   def url
-    raise "Please impelment #url"
+    raise "Please implement #url"
   end
 
   private
