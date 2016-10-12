@@ -1,5 +1,5 @@
 <section>
-  <h3><%= %w{ Sunday Monday Tuesday Wedensday Thursday Friday Saturday }[day]  %></h3>
+  <h3><%= %w{ Sunday Monday Tuesday Wednesday Thursday Friday Saturday }[day]  %></h3>
   <% meetups.each do |meetup| %>
     <h4><em><%= meetup.name %></em></h4>
     <small><%= meetup.group.name %> - <%= meetup.time.strftime('%a, %b %d - %l:%M%p') %> </small>
