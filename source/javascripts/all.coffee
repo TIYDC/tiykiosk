@@ -11,10 +11,7 @@ document.getElementById('today').innerHTML = today
 checkForNewBuild = ->
   $.get 'build.json', (rep) ->
     unless rep.build_id == window.kisokBuild
-      if location.host != "localhost"
-        location.reload()
-      else
-        console.log rep.build_id, window.kisokBuild, "Detecting newer content would reload in Prod"
+      location.reload()
 
 minutesToWaitBeforeCheckingForNewBuild = 10
 setInterval(checkForNewBuild, minutesToWaitBeforeCheckingForNewBuild * 60 * 1000)
